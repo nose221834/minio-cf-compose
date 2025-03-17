@@ -3,7 +3,7 @@ services:
     image: "cloudflare/cloudflared:latest"
     container_name: "cloudflare"
     volumes:
-      -  './cloudflare:/home/nonroot/.cloudflared'
+      -  './web/prod:/home/nonroot/.cloudflared'
     command: tunnel run
     restart: unless-stopped
 
