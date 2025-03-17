@@ -1,0 +1,22 @@
+services:
+  cloudflare:
+    image: "cloudflare/cloudflared:latest"
+    container_name: "cloudflare"
+    volumes:
+      -  './cloudflare:/home/nonroot/.cloudflared'
+    command: tunnel run
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"      # S3互換API用ポート
+      - "9001:9001"      # 管理コンソール用ポート
+    volumes:
+      - ./minio/data:/data      # ホストのディレクトリをバインドマウント（データ永続化）
+      - ./minio/config:/root/.minio  # ホスト側に設定情報を永続化
+    env_file:
+      - ./.env
+    command: server /data --console-address ":9001"
